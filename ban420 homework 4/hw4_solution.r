@@ -1,3 +1,6 @@
+# Jan Grosser, 26.10.23
+
+
 # Assignment 1:  
 library(tweedie) 
 library(ggplot2)
