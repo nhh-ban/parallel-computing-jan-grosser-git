@@ -12,10 +12,17 @@ simTweedieTest <-
 
 
 # Assignment 2:  
-MTweedieTests <-  
-  function(N,M,sig){ 
-    sum(replicate(M,simTweedieTest(N)) < sig)/M 
-  } 
+
+MTweedieTests <- function(N, M, sig) {
+  maxcores <- 8
+  Cores <- min(parallel::detectCores(), maxcores)
+  plan(multisession,workers = Cores)  
+  results <- future_map(rep(1, M), ~simTweedieTest(N),.options = furrr_options(seed = 123))
+  sum(unlist(results) < sig) / M
+}
+
+
+
 
 
 # Assignment 3:  
@@ -24,6 +31,7 @@ df <-
     N = c(10,100,1000,5000, 10000), 
     M = 1000, 
     share_reject = NA) 
+
 
 
 for(i in 1:nrow(df)){ 
@@ -38,7 +46,7 @@ for(i in 1:nrow(df)){
 
 
 ## Assignemnt 4 
-   
+
 # This is one way of solving it - maybe you have a better idea? 
 # First, write a function for simulating data, where the "type" 
 # argument controls the distribution. We also need to ensure 

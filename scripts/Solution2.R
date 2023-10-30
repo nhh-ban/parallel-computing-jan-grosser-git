@@ -1,3 +1,5 @@
+#rewrite the final loop to use parallel computing
+
 # Assignment 1:  
 library(tweedie) 
 library(ggplot2)
@@ -25,6 +27,16 @@ df <-
     M = 1000, 
     share_reject = NA) 
 
+# Parallel Computing
+library(doParallel)
+
+maxcores <- 8
+
+Cores <- min(parallel::detectCores(), maxcores)
+
+cl <- makeCluster(Cores)
+
+registerDoParallel(cl)
 
 for(i in 1:nrow(df)){ 
   df$share_reject[i] <-  
@@ -34,11 +46,12 @@ for(i in 1:nrow(df)){
       sig=.05) 
 } 
 
+stopCluster(cl)
 
 
 
 ## Assignemnt 4 
-   
+
 # This is one way of solving it - maybe you have a better idea? 
 # First, write a function for simulating data, where the "type" 
 # argument controls the distribution. We also need to ensure 
